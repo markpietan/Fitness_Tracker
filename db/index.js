@@ -5,8 +5,9 @@ const client = new Client(
   process.env.DATABASE_URL || "postgres://localhost:5432/fitness-dev"
 );
 
-async function createUser(username, password) {
+async function createUser({ username, password }) {
   try {
+    console.log(username, password);
     let result = await client.query(
       `
 INSERT INTO users (username, password) VALUES($1, $2) RETURNING *;
@@ -14,6 +15,7 @@ INSERT INTO users (username, password) VALUES($1, $2) RETURNING *;
       [username, password]
     );
     console.log(result.rows);
+    return result.rows;
   } catch (error) {
     throw error;
   }
@@ -28,11 +30,28 @@ async function userNameExists(username) {
       [username]
     );
     console.log(result.rows);
-    if (result.rows.length > 0){
-        return true
+    if (result.rows.length > 0) {
+      return true;
     } else {
-        return false
+      return false;
     }
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function getUserByUserName(username) {
+  try {
+    let result = await client.query(
+      `
+        SELECT password FROM users WHERE username = $1
+        `,
+      [username]
+    );
+    console.log(result.rows);
+    
+      return result.rows;
+    
   } catch (error) {
     throw error;
   }
@@ -42,4 +61,5 @@ module.exports = {
   client,
   createUser,
   userNameExists,
+  getUserByUserName,
 };

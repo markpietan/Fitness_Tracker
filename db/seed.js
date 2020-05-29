@@ -49,7 +49,7 @@ async function dropTables() {
 async function testDb() {
   await dropTables();
   await createTables();
-  await createUser("Bob", "1234");
+  await createUser({username: "Bob", password: "1234"});
   let test = await userNameExists("Bob")
   console.log(test)
 }
