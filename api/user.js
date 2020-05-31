@@ -1,11 +1,13 @@
+require("dotenv").config({path: "/Users/markpietan/curriculum/Fitness_Tracker/.env"})
 const express = require("express");
 const userRouter = express.Router();
 const bcrypt = require("bcrypt");
-const { createUser, getUserByUserName } = require("./../db/index");
+const { createUser, getUserByUserName } = require("../db/index");
 const jsonwebtoken = require("jsonwebtoken")
 
 userRouter.post("/login", async (req, res, next) => {
     const { username, password } = req.body;
+    console.log(process.env.JWT_SECRET)
     try {
         const rows = await getUserByUserName(username)
     
@@ -13,12 +15,17 @@ userRouter.post("/login", async (req, res, next) => {
            res.send({message: "user does not exist in database"})
        }
        let hashed = rows[0].password
-     
+       const {id} = rows[0]
+       console.log(username, id)
        bcrypt.compare(password, hashed, function(err, passwordsMatch) {
         if (passwordsMatch) {
         console.log("userloggedin")
+        const token = jsonwebtoken.sign({username: username, id: id}, process.env.JWT_SECRET)
+        console.log(token)
+        req.user= {username: username, id: id}
+        res.send({token})
         } else {
-          throw SomeError;
+          throw err;
         }
       });  
     } catch (error) {

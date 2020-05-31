@@ -44,7 +44,7 @@ async function getUserByUserName(username) {
   try {
     let result = await client.query(
       `
-        SELECT password FROM users WHERE username = $1
+        SELECT * FROM users WHERE username = $1
         `,
       [username]
     );
@@ -57,9 +57,28 @@ async function getUserByUserName(username) {
   }
 }
 
+
+async function getUserById(id) {
+    try {
+      let result = await client.query(
+        `
+          SELECT * FROM users WHERE id = $1
+          `,
+        [id]
+      );
+      console.log(result.rows);
+      
+        return result.rows;
+      
+    } catch (error) {
+      throw error;
+    }
+  }
+
 module.exports = {
   client,
   createUser,
   userNameExists,
   getUserByUserName,
+  getUserById,
 };
