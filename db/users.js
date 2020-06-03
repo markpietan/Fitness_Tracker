@@ -53,7 +53,25 @@ async function userNameExists(username) {
     }
   }
   
+async function getAllRoutinesByUsername(username){
+  try {
+    let rows = await getUserByUserName(username)
+    let user = rows[0]
 
+    let result = await client.query(
+      `
+        SELECT * FROM routines WHERE "creatorId" = $1
+        `,
+      [user.id]
+    );
+    console.log(result.rows);
+    
+      return result.rows;
+    
+  } catch (error) {
+    throw error;
+  }
+}
   
   
   async function getUserById(id) {
@@ -66,7 +84,7 @@ async function userNameExists(username) {
         );
         console.log(result.rows);
         
-          return result.rows;
+          return result.rows[0];
         
       } catch (error) {
         throw error;
@@ -78,5 +96,6 @@ async function userNameExists(username) {
     userNameExists,
     getUserByUserName,
     getUserById,
+    getAllRoutinesByUsername,
   };
   
