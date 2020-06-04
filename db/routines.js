@@ -1,8 +1,8 @@
 const {client} = require("./client")
-
+const {generateUpdateString} = require("./../api/utils")
 
 async function getAllRoutines(){
-
+// also get all activities
     try {
       const response = await client.query(`SELECT * FROM routines;`);
       return response.rows;
@@ -49,6 +49,38 @@ async function createRoutine({creatorId, public, name, goal}){
 
 
 
+//     Find the routine with id equal to the passed in id
+// Don't update the routine id, but do update the public status, name, or goal, as necessary
+// Return the updated routine
+
+
+
+async function updateRoutine(id, fields={}){
+ const psqlString = generateUpdateString(fields)
+ 
+  if (psqlString.length === 0) {
+    return;
+  }
+
+  try {
+    const {
+      rows: [routine],
+    } = await client.query(
+      `
+        UPDATE routines
+        SET ${psqlString}
+        WHERE id=${id}
+        RETURNING *;
+      `,
+      Object.values(fields)
+    );
+
+    return routine;
+  } catch (error) {
+    throw error;
+  }
+
+}
 
 module.exports={
     getAllRoutines,

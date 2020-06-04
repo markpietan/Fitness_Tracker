@@ -1,4 +1,5 @@
 const { client } = require("./client");
+const {generateUpdateString} = require("./../api/utils")
 
 async function getAllActivities() {
   try {
@@ -22,23 +23,36 @@ async function createActivity({ name, description }) {
   }
 }
 
-async function updateActivity({ id, name, description }) {
-    try {
-        const response = await client.query(
-          `UPDATE activities SET name= $1, description= $2 WHERE id = $3`,
-          [name, description, id]
-        );
-        return response.rows[0];
-      } catch (error) {
-        throw error;
-      }
-  //     don't try to update the id
-  // do update the name and description
-  // return the updated activity
-}
+async function updateActivity(id, fields={}){
+  const psqlString = generateUpdateString(fields)
+  
+   if (psqlString.length === 0) {
+     return;
+   }
+ 
+   try {
+     const {
+       rows: [activity],
+     } = await client.query(
+       `
+         UPDATE activities
+         SET ${psqlString}
+         WHERE id=${id}
+         RETURNING *;
+       `,
+       Object.values(fields)
+     );
+ 
+     return activity;
+   } catch (error) {
+     throw error;
+   }
+ 
+ }
 
 module.exports = {
   getAllActivities,
   createActivity,
-  updateActivity,
+  updateActivity
+ 
 };
