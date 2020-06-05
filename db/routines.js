@@ -18,12 +18,17 @@ async function getPublicRoutines(){
 
 }
 
-async function getAllRoutinesByUser(){
-    getAllRoutinesByUser({ username })
+async function getAllRoutinesByUser({id}){
+    try {
+        const response = await client.query(`SELECT * FROM routines WHERE "creatorId" = $1;`, [id]);
+        return response.rows;
+      } catch (error) {
+        throw error;
+      }
 // select and return an array of all routines made by user, include their activities
 }
 
-async function getPUblicRoutinesByUser({username}){
+async function getPublicRoutinesByUser({username}){
     // select and return an array of public routines made by user, include their activities
 
 }
@@ -86,7 +91,7 @@ module.exports={
     getAllRoutines,
     getPublicRoutines,
     getAllRoutinesByUser,
-    getPUblicRoutinesByUser,
+    getPublicRoutinesByUser,
     getPublicRoutinesByActivity,
     createRoutine,
     updateRoutine,

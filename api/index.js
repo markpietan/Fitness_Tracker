@@ -3,6 +3,7 @@ const apiRouter = express.Router()
 const userRouter = require("./user")
 const activityRouter = require("./activities")
 const routineRouter = require("./routine")
+const routineActivityRouter = require("./routine_activities")
 require("dotenv").config({path: "/Users/markpietan/curriculum/Fitness_Tracker/.env"})
 const jwt = require("jsonwebtoken")
 const {getUserById} = require("./../db/index")
@@ -43,6 +44,7 @@ apiRouter.use(async (req, res, next) => {
 apiRouter.use("/users", userRouter)
 apiRouter.use("/activities", activityRouter)
 apiRouter.use("/routines", routineRouter)
+apiRouter.use("/routine_activities", routineActivityRouter)
 
 
 
