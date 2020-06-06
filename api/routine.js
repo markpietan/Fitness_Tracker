@@ -5,10 +5,12 @@ const {
   createRoutine,
   updateRoutine,
   getAllRoutinesByUser,
+  destroyRoutineById,
 } = require("./../db/routines");
 
 const {
   addActivityToRoutine,
+  destroyRoutineActivityByRoutineId,
   } = require("./../db/routine_activities");
 
 
@@ -17,7 +19,6 @@ const { requireUser } = require("./utils.js");
 routineRouter.get("/", async function (req, res, next) {
   const rows = await getAllRoutines();
   console.log(rows);
-  res.send({ rows });
 });
 
 routineRouter.post("/", requireUser, async function (req, res, next) {
@@ -87,5 +88,20 @@ routineRouter.post("/:routineId/activities", async function (req, res, next) {
  console.log(routineActivity)
  res.send({routineActivity})
 });
-
+routineRouter.delete("/:routineId", requireUser, async function(req, res, next){
+    const routineId = req.params.routineId;
+    const userRoutines = await getAllRoutinesByUser(req.user)
+    const isUserRoutine =userRoutines.some(element => {
+      if (element.id === Number(routineId)) {
+          return true
+      }
+    });
+    if (isUserRoutine === false) {
+        next({message: "This is not your routine"})
+    }
+    // await 
+ await destroyRoutineActivityByRoutineId(routineId)
+ await destroyRoutineById(routineId)
+ res.send({message: "Routine with Id: "+routineId+ " was destroyed succesfully"})
+})
 module.exports = routineRouter;

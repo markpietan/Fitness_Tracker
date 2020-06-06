@@ -2,7 +2,7 @@ require("dotenv").config({path: "/Users/markpietan/curriculum/Fitness_Tracker/.e
 const express = require("express");
 const userRouter = express.Router();
 const bcrypt = require("bcrypt");
-const { createUser, getUserByUserName, getAllRoutinesByUsername } = require("../db/index");
+const { createUser, getUserByUserName, getAllRoutinesByUsername, getPublicRoutinesByUser } = require("../db/index");
 const jsonwebtoken = require("jsonwebtoken")
 
 userRouter.post("/login", async (req, res, next) => {
@@ -59,8 +59,9 @@ userRouter.post("/register", (req, res, next) => {
 
 userRouter.get("/:username/routines", async function(req, res, next){
   const username = req.params.username
-  const rows = await getAllRoutinesByUsername(username)
+  const rows = await getPublicRoutinesByUser({username})
   console.log(rows)
+  res.send({rows})
 })
 
 module.exports = userRouter;

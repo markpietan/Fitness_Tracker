@@ -47,15 +47,68 @@ async function updateRoutineActivity(id, fields = {}){
 }
 
 async function destroyRoutineActivity(id){
+    try {
+        let result = await client.query(
+          `
+            DELETE FROM routineactivities WHERE id = $1;
+            `,
+          [id]
+        );
+        console.log(result.rows);
+        
+          return result.rows[0];
+        
+      } catch (error) {
+        throw error;
+      }
     // destroyRoutineActivity(id)
     // remove routine_activity from database
 }
+
+async function destroyRoutineActivityByRoutineId(id){
+    try {
+        let result = await client.query(
+          `
+            DELETE FROM routineactivities WHERE "routineId" = $1;
+            `,
+          [id]
+        );
+        console.log(result.rows);
+        
+          return result.rows[0];
+        
+      } catch (error) {
+        throw error;
+      }
+    // destroyRoutineActivity(id)
+    // remove routine_activity from database
+}
+
+  
+async function getRoutineActivityById(id) {
+    try {
+      let result = await client.query(
+        `
+          SELECT * FROM routineactivities WHERE id = $1;
+          `,
+        [id]
+      );
+      console.log(result.rows);
+      
+        return result.rows[0];
+      
+    } catch (error) {
+      throw error;
+    }
+  }
 
 
 module.exports={
     addActivityToRoutine,
     updateRoutineActivity,
     destroyRoutineActivity,
+    getRoutineActivityById,
+    destroyRoutineActivityByRoutineId,
 }
 
 
