@@ -14,7 +14,7 @@ const jsonwebtoken = require("jsonwebtoken");
 
 userRouter.post("/login", async (req, res, next) => {
   const { username, password } = req.body;
-  console.log(process.env.JWT_SECRET);
+  console.log(process.env.JWT_SECRET+" JWT_SECRET!!!!!!");
   try {
     const rows = await getUserByUserName(username);
 
