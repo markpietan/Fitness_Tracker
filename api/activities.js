@@ -5,6 +5,7 @@ const {
   createActivity,
   getAllActivities,
   updateActivity,
+  getRoutinesByActivityId,
 } = require("./../db/activities");
 activityRouter.get("/", async function (req, res, next) {
   try {
@@ -15,6 +16,14 @@ activityRouter.get("/", async function (req, res, next) {
     throw error;
   }
 });
+
+activityRouter.get("/:activityId/routines", async function(req, res, next) {
+const activityId = req.params.activityId
+const rows = await getRoutinesByActivityId(activityId)
+console.log(rows)
+res.send({rows})
+})
+
 
 activityRouter.post("/", utilsObject.requireUser, async function (
   req,

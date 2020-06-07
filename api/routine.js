@@ -6,6 +6,7 @@ const {
   updateRoutine,
   getAllRoutinesByUser,
   destroyRoutineById,
+  getPublicRoutines,
 } = require("./../db/routines");
 
 const {
@@ -17,8 +18,9 @@ const {
 const { requireUser } = require("./utils.js");
 
 routineRouter.get("/", async function (req, res, next) {
-  const rows = await getAllRoutines();
+  const rows = await getPublicRoutines();
   console.log(rows);
+  res.send({rows})
 });
 
 routineRouter.post("/", requireUser, async function (req, res, next) {

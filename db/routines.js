@@ -14,10 +14,15 @@ async function getAllRoutines() {
 
 async function getPublicRoutines() {
   try {
-    const response = await client.query(`SELECT routines.*
-            FROM routines
-            JOIN routineactivities ON routines.id=routineactivities."routineId";`);
-            console.log(response)
+    const response = await client.query(
+      `SELECT routines.*, routineactivities.duration, routineactivities.count, 
+      activities.* FROM routines 
+      JOIN routineactivities ON routines.id=routineactivities."routineId" 
+      JOIN activities ON activities.id=routineactivities."activityId"
+      WHERE routines.public = true;`
+    );
+    console.log(response);
+    return response.rows
   } catch (error) {
     throw error;
   }

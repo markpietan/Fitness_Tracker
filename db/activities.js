@@ -23,6 +23,25 @@ async function createActivity({ name, description }) {
   }
 }
 
+async function getRoutinesByActivityId(id){
+  try {
+    const response = await client.query(
+      `SELECT routines.* FROM routines 
+      JOIN routineactivities ON routines.id=routineactivities."routineId" 
+      WHERE routines.public = true AND routineactivities."activityId"= $1;`,
+      [id]
+    );
+    return response.rows;
+  } catch (error) {
+    throw error;
+  }
+
+
+}
+
+
+
+
 async function updateActivity(id, fields={}){
   const psqlString = generateUpdateString(fields)
   
@@ -53,6 +72,7 @@ async function updateActivity(id, fields={}){
 module.exports = {
   getAllActivities,
   createActivity,
-  updateActivity
+  updateActivity,
+  getRoutinesByActivityId,
  
 };
