@@ -52,7 +52,7 @@ async function testDb() {
   await createTables();
   // await createUser({ username: "Bob", password: "1234" });
   // let test = await userNameExists("Bob");
-  console.log(test);
+  // git add .
 }
 testDb()
   .then(function (res) {
