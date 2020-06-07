@@ -30,8 +30,7 @@ routineActivitiesRouter.patch(
       }
     });
     if (isUserRoutine === false) {
-        next({message: "This is not your routine"})
-        
+      next({ message: "This is not your routine" });
     }
 
     const updatedroutineActivity = await updateRoutineActivity(
@@ -58,12 +57,15 @@ routineActivitiesRouter.delete(
       }
     });
     if (isUserRoutine === false) {
-        next({message: "This is not your routine"})
-        
+      next({ message: "This is not your routine" });
     }
-   await destroyRoutineActivity(routineActivityId)
-   res.send({message: "Routine activity with Id: "+routineActivityId+ " was destroyed succesfully"})
- 
+    await destroyRoutineActivity(routineActivityId);
+    res.send({
+      message:
+        "Routine activity with Id: " +
+        routineActivityId +
+        " was destroyed succesfully",
+    });
   }
 );
 

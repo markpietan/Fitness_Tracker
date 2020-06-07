@@ -1,5 +1,5 @@
 const { client } = require("./client");
-const {generateUpdateString} = require("./../api/utils")
+const { generateUpdateString } = require("./../api/utils");
 
 async function getAllActivities() {
   try {
@@ -23,7 +23,7 @@ async function createActivity({ name, description }) {
   }
 }
 
-async function getRoutinesByActivityId(id){
+async function getRoutinesByActivityId(id) {
   try {
     const response = await client.query(
       `SELECT routines.* FROM routines 
@@ -35,44 +35,37 @@ async function getRoutinesByActivityId(id){
   } catch (error) {
     throw error;
   }
-
-
 }
 
+async function updateActivity(id, fields = {}) {
+  const psqlString = generateUpdateString(fields);
 
+  if (psqlString.length === 0) {
+    return;
+  }
 
-
-async function updateActivity(id, fields={}){
-  const psqlString = generateUpdateString(fields)
-  
-   if (psqlString.length === 0) {
-     return;
-   }
- 
-   try {
-     const {
-       rows: [activity],
-     } = await client.query(
-       `
+  try {
+    const {
+      rows: [activity],
+    } = await client.query(
+      `
          UPDATE activities
          SET ${psqlString}
          WHERE id=${id}
          RETURNING *;
        `,
-       Object.values(fields)
-     );
- 
-     return activity;
-   } catch (error) {
-     throw error;
-   }
- 
- }
+      Object.values(fields)
+    );
+
+    return activity;
+  } catch (error) {
+    throw error;
+  }
+}
 
 module.exports = {
   getAllActivities,
   createActivity,
   updateActivity,
   getRoutinesByActivityId,
- 
 };

@@ -12,15 +12,14 @@ const {
 const {
   addActivityToRoutine,
   destroyRoutineActivityByRoutineId,
-  } = require("./../db/routine_activities");
-
+} = require("./../db/routine_activities");
 
 const { requireUser } = require("./utils.js");
 
 routineRouter.get("/", async function (req, res, next) {
   const rows = await getPublicRoutines();
   console.log(rows);
-  res.send({rows})
+  res.send({ rows });
 });
 
 routineRouter.post("/", requireUser, async function (req, res, next) {
@@ -45,16 +44,16 @@ routineRouter.patch("/:routineId", requireUser, async function (
   const routineId = req.params.routineId;
   const { public, name, goal } = req.body;
   console.log(public, name, goal, routineId);
-  const userRoutines = await getAllRoutinesByUser(req.user)
-  const isUserRoutine =userRoutines.some(element => {
+  const userRoutines = await getAllRoutinesByUser(req.user);
+  const isUserRoutine = userRoutines.some((element) => {
     if (element.id === Number(routineId)) {
-        return true
+      return true;
     }
   });
   if (isUserRoutine === false) {
-      next({message: "This is not your routine"})
+    next({ message: "This is not your routine" });
   }
- 
+
   updateObj = {};
   if (public !== undefined) {
     updateObj.public = public;
@@ -84,26 +83,31 @@ routineRouter.post("/:routineId/activities", async function (req, res, next) {
     count,
     duration,
     routineId,
-
-  }
- const routineActivity = await addActivityToRoutine(routineActivityObj)
- console.log(routineActivity)
- res.send({routineActivity})
+  };
+  const routineActivity = await addActivityToRoutine(routineActivityObj);
+  console.log(routineActivity);
+  res.send({ routineActivity });
 });
-routineRouter.delete("/:routineId", requireUser, async function(req, res, next){
-    const routineId = req.params.routineId;
-    const userRoutines = await getAllRoutinesByUser(req.user)
-    const isUserRoutine =userRoutines.some(element => {
-      if (element.id === Number(routineId)) {
-          return true
-      }
-    });
-    if (isUserRoutine === false) {
-        next({message: "This is not your routine"})
+routineRouter.delete("/:routineId", requireUser, async function (
+  req,
+  res,
+  next
+) {
+  const routineId = req.params.routineId;
+  const userRoutines = await getAllRoutinesByUser(req.user);
+  const isUserRoutine = userRoutines.some((element) => {
+    if (element.id === Number(routineId)) {
+      return true;
     }
-    // await 
- await destroyRoutineActivityByRoutineId(routineId)
- await destroyRoutineById(routineId)
- res.send({message: "Routine with Id: "+routineId+ " was destroyed succesfully"})
-})
+  });
+  if (isUserRoutine === false) {
+    next({ message: "This is not your routine" });
+  }
+  // await
+  await destroyRoutineActivityByRoutineId(routineId);
+  await destroyRoutineById(routineId);
+  res.send({
+    message: "Routine with Id: " + routineId + " was destroyed succesfully",
+  });
+});
 module.exports = routineRouter;

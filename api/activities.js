@@ -17,13 +17,12 @@ activityRouter.get("/", async function (req, res, next) {
   }
 });
 
-activityRouter.get("/:activityId/routines", async function(req, res, next) {
-const activityId = req.params.activityId
-const rows = await getRoutinesByActivityId(activityId)
-console.log(rows)
-res.send({rows})
-})
-
+activityRouter.get("/:activityId/routines", async function (req, res, next) {
+  const activityId = req.params.activityId;
+  const rows = await getRoutinesByActivityId(activityId);
+  console.log(rows);
+  res.send({ rows });
+});
 
 activityRouter.post("/", utilsObject.requireUser, async function (
   req,

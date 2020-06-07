@@ -50,9 +50,9 @@ async function dropTables() {
 async function testDb() {
   await dropTables();
   await createTables();
-  await createUser({username: "Bob", password: "1234"});
-  let test = await userNameExists("Bob")
-  console.log(test)
+  await createUser({ username: "Bob", password: "1234" });
+  let test = await userNameExists("Bob");
+  console.log(test);
 }
 testDb()
   .then(function (res) {
@@ -65,7 +65,3 @@ testDb()
     client.end();
   });
 console.log("made it!");
-
-
-
-

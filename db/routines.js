@@ -22,7 +22,7 @@ async function getPublicRoutines() {
       WHERE routines.public = true;`
     );
     console.log(response);
-    return response.rows
+    return response.rows;
   } catch (error) {
     throw error;
   }
