@@ -34,6 +34,7 @@ routineRouter.post("/", requireUser, async function (req, res, next) {
 
   const response = await createRoutine(tempObj);
   console.log(response);
+  res.send({response})
 });
 
 routineRouter.patch("/:routineId", requireUser, async function (
